@@ -1,5 +1,5 @@
 var GITHUB_OWNER = "gvbvdxxalt3";
-var GITHUB_REPO = "gvbmod2";
+var GITHUB_REPO = "gvbmod2-packager";
 var GITHUB_TOKEN = process.env.ghToken;
 var ASSET_EXTENSION = "zip"; //Must be lowercase
 
@@ -130,15 +130,25 @@ function getRequest(url) {
     return !zip.files[file].dir;
   });
 
-  for (var folder of folders) {
-    var filePath = path.join(BUILD_FOLDER, folder);
-    if (!fs.existsSync(filePath)) {
-      fs.mkdirSync(filePath);
+  function addDirectory(folder) {
+    var curDir = [];
+    var dirs = folder.split("/").map((f) => {return f.trim();});
+    for (var dir of dirs) {
+      curDir.push(dir);
+      var filePath = path.join(BUILD_FOLDER, curDir.join("/"));
+      if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+        console.log(`Create folder ${filePath}`);
+      }
     }
-    console.log(`Create folder ${filePath}`);
+  }
+
+  for (var folder of folders) {
+    addDirectory(folder);
   }
 
   for (var file of files) {
+    addDirectory(file.split("/").slice(0,-1).join("/"));
     var filePath = path.join(BUILD_FOLDER, file);
     fs.writeFileSync(filePath, await zip.files[file].async("uint8array"));
     console.log(`Write file ${filePath}`);
