@@ -1,0 +1,16 @@
+{
+  "name": "site-zip-download-build-tool",
+  "version": "0.1.0",
+  "description": "Can download build zip files",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node downloadbuild.js"
+  },
+  "dependencies": {
+    "https": "*",
+    "http": "*",
+    "jszip": "^3.10.1",
+    "ws": "^8.17.0"
+  },
+  "license": "MIT"
+}
